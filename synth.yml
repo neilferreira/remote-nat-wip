@@ -87,29 +87,6 @@ Resources:
       - RDSVPCVPCGW8F90888C
     Metadata:
       aws:cdk:path: RdsIssueStack/RDSVPC/PublicSubnet1/DefaultRoute
-  RDSVPCPublicSubnet1EIPAF87146A:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: vpc
-      Tags:
-        - Key: Name
-          Value: RdsIssueStack/RDSVPC/PublicSubnet1
-    Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PublicSubnet1/EIP
-  RDSVPCPublicSubnet1NATGatewayAB878E4D:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      SubnetId:
-        Ref: RDSVPCPublicSubnet1SubnetDCA7847D
-      AllocationId:
-        Fn::GetAtt:
-          - RDSVPCPublicSubnet1EIPAF87146A
-          - AllocationId
-      Tags:
-        - Key: Name
-          Value: RdsIssueStack/RDSVPC/PublicSubnet1
-    Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PublicSubnet1/NATGateway
   RDSVPCPublicSubnet2SubnetB01D4199:
     Type: AWS::EC2::Subnet
     Properties:
@@ -161,30 +138,7 @@ Resources:
       - RDSVPCVPCGW8F90888C
     Metadata:
       aws:cdk:path: RdsIssueStack/RDSVPC/PublicSubnet2/DefaultRoute
-  RDSVPCPublicSubnet2EIP4BE1B563:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: vpc
-      Tags:
-        - Key: Name
-          Value: RdsIssueStack/RDSVPC/PublicSubnet2
-    Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PublicSubnet2/EIP
-  RDSVPCPublicSubnet2NATGatewayC860E12B:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      SubnetId:
-        Ref: RDSVPCPublicSubnet2SubnetB01D4199
-      AllocationId:
-        Fn::GetAtt:
-          - RDSVPCPublicSubnet2EIP4BE1B563
-          - AllocationId
-      Tags:
-        - Key: Name
-          Value: RdsIssueStack/RDSVPC/PublicSubnet2
-    Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PublicSubnet2/NATGateway
-  RDSVPCPrivateSubnet1SubnetA484341B:
+  RDSVPCIsolatedSubnet1Subnet5EB712A6:
     Type: AWS::EC2::Subnet
     Properties:
       CidrBlock: 10.0.128.0/18
@@ -197,43 +151,33 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: aws-cdk:subnet-name
-          Value: Private
+          Value: Isolated
         - Key: aws-cdk:subnet-type
-          Value: Private
+          Value: Isolated
         - Key: Name
-          Value: RdsIssueStack/RDSVPC/PrivateSubnet1
+          Value: RdsIssueStack/RDSVPC/IsolatedSubnet1
     Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet1/Subnet
-  RDSVPCPrivateSubnet1RouteTableABA9F807:
+      aws:cdk:path: RdsIssueStack/RDSVPC/IsolatedSubnet1/Subnet
+  RDSVPCIsolatedSubnet1RouteTable10D8753F:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
         Ref: RDSVPC2E641863
       Tags:
         - Key: Name
-          Value: RdsIssueStack/RDSVPC/PrivateSubnet1
+          Value: RdsIssueStack/RDSVPC/IsolatedSubnet1
     Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet1/RouteTable
-  RDSVPCPrivateSubnet1RouteTableAssociation227805DB:
+      aws:cdk:path: RdsIssueStack/RDSVPC/IsolatedSubnet1/RouteTable
+  RDSVPCIsolatedSubnet1RouteTableAssociationB3714F78:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId:
-        Ref: RDSVPCPrivateSubnet1RouteTableABA9F807
+        Ref: RDSVPCIsolatedSubnet1RouteTable10D8753F
       SubnetId:
-        Ref: RDSVPCPrivateSubnet1SubnetA484341B
+        Ref: RDSVPCIsolatedSubnet1Subnet5EB712A6
     Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet1/RouteTableAssociation
-  RDSVPCPrivateSubnet1DefaultRoute6396A0F8:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId:
-        Ref: RDSVPCPrivateSubnet1RouteTableABA9F807
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId:
-        Ref: RDSVPCPublicSubnet1NATGatewayAB878E4D
-    Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet1/DefaultRoute
-  RDSVPCPrivateSubnet2Subnet39872682:
+      aws:cdk:path: RdsIssueStack/RDSVPC/IsolatedSubnet1/RouteTableAssociation
+  RDSVPCIsolatedSubnet2Subnet339DFD58:
     Type: AWS::EC2::Subnet
     Properties:
       CidrBlock: 10.0.192.0/18
@@ -246,42 +190,32 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: aws-cdk:subnet-name
-          Value: Private
+          Value: Isolated
         - Key: aws-cdk:subnet-type
-          Value: Private
+          Value: Isolated
         - Key: Name
-          Value: RdsIssueStack/RDSVPC/PrivateSubnet2
+          Value: RdsIssueStack/RDSVPC/IsolatedSubnet2
     Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet2/Subnet
-  RDSVPCPrivateSubnet2RouteTable37F82D3A:
+      aws:cdk:path: RdsIssueStack/RDSVPC/IsolatedSubnet2/Subnet
+  RDSVPCIsolatedSubnet2RouteTable54AD1024:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
         Ref: RDSVPC2E641863
       Tags:
         - Key: Name
-          Value: RdsIssueStack/RDSVPC/PrivateSubnet2
+          Value: RdsIssueStack/RDSVPC/IsolatedSubnet2
     Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet2/RouteTable
-  RDSVPCPrivateSubnet2RouteTableAssociation3F48712E:
+      aws:cdk:path: RdsIssueStack/RDSVPC/IsolatedSubnet2/RouteTable
+  RDSVPCIsolatedSubnet2RouteTableAssociationF1F0EFFC:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId:
-        Ref: RDSVPCPrivateSubnet2RouteTable37F82D3A
+        Ref: RDSVPCIsolatedSubnet2RouteTable54AD1024
       SubnetId:
-        Ref: RDSVPCPrivateSubnet2Subnet39872682
+        Ref: RDSVPCIsolatedSubnet2Subnet339DFD58
     Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet2/RouteTableAssociation
-  RDSVPCPrivateSubnet2DefaultRouteD4A61FCC:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId:
-        Ref: RDSVPCPrivateSubnet2RouteTable37F82D3A
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId:
-        Ref: RDSVPCPublicSubnet2NATGatewayC860E12B
-    Metadata:
-      aws:cdk:path: RdsIssueStack/RDSVPC/PrivateSubnet2/DefaultRoute
+      aws:cdk:path: RdsIssueStack/RDSVPC/IsolatedSubnet2/RouteTableAssociation
   RDSVPCIGWDE0579A7:
     Type: AWS::EC2::InternetGateway
     Properties:
@@ -304,8 +238,8 @@ Resources:
     Properties:
       DBSubnetGroupDescription: Subnets for AuroraServerlessCluster database
       SubnetIds:
-        - Ref: RDSVPCPrivateSubnet1SubnetA484341B
-        - Ref: RDSVPCPrivateSubnet2Subnet39872682
+        - Ref: RDSVPCIsolatedSubnet1Subnet5EB712A6
+        - Ref: RDSVPCIsolatedSubnet2Subnet339DFD58
     Metadata:
       aws:cdk:path: RdsIssueStack/AuroraServerlessCluster/Subnets/Default
   AuroraServerlessClusterSecurityGroup5A67466E:
@@ -354,7 +288,7 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAAE21RwW7CMAz9lt1DWDnsPFYmxAVVFHF3U8MCbYJsB4Sq/vsSQO2m7eSX55dnvyTTWZbp15d3uPLE1KdpZzyh7koBc1IbZB/IoMq9Y6FgROV7N7J7Fxu1Fetdr5JDRzXrbgECFTCWaAhFlUgXpAaZ8yawIKkyVA5lST6ck8ni4w/xVPaK7x7cgoMDku5id7BNZQt0QJlL3PerRXdf8P9Or9DMdLc7m6TZFbkqQtVY85h9vzegjQ+CW6gaHPmRmzN7YyHFHsQJfK6KVNYgSxC8wk0VZC8RjsYrF1OlqE/BY5Pn6UeKGCGQldvwJL+Ivu+V8zXqI08v2ZuexR88srUTCk5si3rzqN/eviF93gEAAA==
+      Analytics: v2:deflate64:H4sIAAAAAAAAE21RQW7CMBB8S+/GNBx6Lg1SxS1KEHfHWaghsdHuOghZ/nudECWt2tPaM+PZGTmTWZbJ15d3daeVbq7roB2CDBUrfRUlkPOoQeTOEqPXLPKTXdCTTURj2DgbxeAQsCEZdopVrQgq0AgsKsAesAWivPXEgKLytQX+ROdvg8nu4w8wKaOg0YM6ZdUZUIbEzrbDOCg8A2855f3qwI4B/2eiAL2R4XjTg+ZY5KLwdWv0c/f4bj6VzjMcVN3Cgi/Ylshpo4bas1gUaHrFsHjsbSowtEroXT2mpdPtR+CU1qPhx9z+FxBjFNY1IC+07rM3uUmfdSFjVugtmw5k+ZzfqiAlg8kBAAA=
     Metadata:
       aws:cdk:path: RdsIssueStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable

@@ -1,4 +1,4 @@
-import * as cdk from '@aws-cdk/core';
+import * as cdk from "@aws-cdk/core";
 import * as rds from "@aws-cdk/aws-rds";
 import * as ec2 from "@aws-cdk/aws-ec2";
 import * as ssm from "@aws-cdk/aws-ssm";
@@ -12,7 +12,9 @@ export class RdsIssueStack extends cdk.Stack {
       username: "root",
     });
 
-    const vpc = new ec2.Vpc(this, "RDSVPC");
+    const vpc = new ec2.Vpc(this, "RDSVPC", {
+      natGateways: 0,
+    });
 
     const rdsCluster = new rds.ServerlessCluster(
       this,
@@ -28,6 +30,7 @@ export class RdsIssueStack extends cdk.Stack {
         credentials: rds.Credentials.fromSecret(dbSecret),
         vpc,
         enableDataApi: true,
+        vpcSubnets: vpc.selectSubnets({ subnetType: ec2.SubnetType.ISOLATED }),
       }
     );
   }
